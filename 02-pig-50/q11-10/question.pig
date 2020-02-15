@@ -28,6 +28,9 @@
 -- 
 fs -rm -f -r output;
 --
+
+
+
 u = LOAD 'data.csv' USING PigStorage(',') 
     AS (id:int, 
         firstname:CHARARRAY, 
@@ -35,6 +38,9 @@ u = LOAD 'data.csv' USING PigStorage(',')
         birthday:CHARARRAY, 
         color:CHARARRAY, 
         quantity:INT);
---
--- >>> Escriba su respuesta a partir de este punto <<<
---
+        
+tabla = FOREACH u GENERATE $2 as col1, UPPER($2) as col2, LOWER($2) as col3;
+tabla = ORDER tabla BY $0 ASC;
+
+STORE tabla INTO 'output' USING PigStorage(',');
+

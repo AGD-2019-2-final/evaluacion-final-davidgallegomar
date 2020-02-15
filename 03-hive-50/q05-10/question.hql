@@ -30,7 +30,7 @@ CREATE TABLE tbl1 (
     c3 STRING,
     c4 MAP<STRING, INT>
 )
-ROW FORMAT DELIMITED 
+ROW FORMAT DELIMITED
 FIELDS TERMINATED BY ','
 COLLECTION ITEMS TERMINATED BY ':'
 MAP KEYS TERMINATED BY '#'
@@ -39,4 +39,13 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+DROP TABLE IF EXISTS data;
+
+CREATE TABLE data AS SELECT YEAR(c4) as year, letras, count(letras) FROM tbl0 LATERAL VIEW explode(c5) tbl0 AS letras GROUP BY YEAR(c4),letras;
+
+  
+  
+INSERT OVERWRITE DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+SELECT * FROM data;
 

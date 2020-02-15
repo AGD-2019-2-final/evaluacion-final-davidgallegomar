@@ -40,3 +40,11 @@ LOAD DATA LOCAL INPATH 'tbl1.csv' INTO TABLE tbl1;
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+DROP TABLE IF EXISTS data1;
+DROP TABLE IF EXISTS data2;
+
+CREATE TABLE data1 AS SELECT explode(C5) FROM tbl0 AS col;
+CREATE TABLE data2 AS SELECT DISTINCT col FROM data1 ORDER BY col;
+
+INSERT OVERWRITE DIRECTORY 'output'
+SELECT * FROM data2;

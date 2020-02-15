@@ -26,5 +26,13 @@ LOAD DATA LOCAL INPATH 'data.tsv' INTO TABLE t0;
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+DROP TABLE IF EXISTS data1;
+DROP TABLE IF EXISTS data2;
 
+CREATE TABLE data1 AS SELECT c2, exp1 as result1 FROM t0 LATERAL VIEW explode(c3) info1 as exp1,exp2;
+CREATE TABLE data2 AS SELECT result2, result1 FROM data1 LATERAL VIEW explode(c2) info2 as result2;
 
+INSERT OVERWRITE DIRECTORY 'output'
+ROW FORMAT DELIMITED FIELDS TERMINATED BY ','
+
+SELECT result2, result1, count(1) FROM data2 GROUP BY result2, result1;

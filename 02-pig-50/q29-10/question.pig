@@ -40,3 +40,10 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+data = FOREACH u GENERATE $3, REGEX_EXTRACT($3, '(\\d{4})-(\\d{2})-(\\d{2})',2), REGEX_EXTRACT($3, '(\\d{4})-(\\d{2})-(\\d{2})',2);
+
+data = (FOREACH data GENERATE $0, CASE $1 WHEN '01' THEN 'ene' WHEN '02' THEN 'feb' WHEN '03' THEN 'mar' WHEN '04' THEN 'abr' WHEN '05' THEN 'may' WHEN '06' THEN 'jun' WHEN '07' THEN 'jul' WHEN '08' THEN 'ago' WHEN '09' THEN 'sep' WHEN '10' THEN 'oct' WHEN '11' THEN 'nov' WHEN '12' THEN 'dic' END, $1, $2);
+
+data = FOREACH data GENERATE $0, $1, $2, (int) $3;
+
+STORE data INTO 'output' USING PigStorage(',');

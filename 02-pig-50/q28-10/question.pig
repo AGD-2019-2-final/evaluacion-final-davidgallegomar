@@ -30,3 +30,7 @@ u = LOAD 'data.csv' USING PigStorage(',')
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
 
+data = FOREACH u GENERATE REGEX_EXTRACT($3, '(\\d{4})-(\\d{2})-(\\d{2})',1);
+data = FOREACH data GENERATE $0, SUBSTRING($0,2,4);
+
+STORE data INTO 'output' USING PigStorage(',');

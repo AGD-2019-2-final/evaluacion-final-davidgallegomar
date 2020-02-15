@@ -26,3 +26,8 @@ u = LOAD 'data.csv' USING PigStorage(',')
 --
 -- >>> Escriba su respuesta a partir de este punto <<<
 --
+data = FOREACH u GENERATE $2 AS surname, SIZE($2) AS longitud;
+data = ORDER data BY longitud DESC, surname;
+data = LIMIT data 5;
+
+STORE data INTO 'output' USING PigStorage(',');
